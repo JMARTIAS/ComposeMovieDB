@@ -1,23 +1,29 @@
 package com.example.composemoviedb
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.composemoviedb.ui.theme.ComposeMovieDBTheme
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,15 +31,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeMovieDBTheme {
 
-                val movies = produceState<List<ServerMovie>>(initialValue = emptyList()) {
-                    value = Retrofit.Builder()
-                        .baseUrl("https://api.themoviedb.org/3/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
-                        .create(MoviesService::class.java)
-                        .getMovies()
-                        .results
-                }
+                val viewModel : MainViewModel = viewModel()
+                val state by viewModel.state.collectAsState()
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -42,6 +41,15 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         topBar = { TopAppBar(title = { Text(text = "Movies") }) }
                     ) { padding ->
+                        if(state.loading){
+                            Box(
+                                modifier= Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ){
+                                CircularProgressIndicator()
+                            }
+
+                        }
                         LazyVerticalGrid(
                             columns = GridCells.Adaptive(120.dp),
                             modifier = Modifier.padding(padding),
@@ -49,9 +57,9 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                             contentPadding = PaddingValues(4.dp)
                         ) {
-                            items(movies.value) { movie ->
+                            items(state.movies) { movie ->
                                 Column {
-                                    MovieItem(movie)
+                                    MovieItem(movie) { viewModel.onMovieClick(movie) }
                                 }
                             }
                         }
@@ -64,15 +72,29 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MovieItem(movie: ServerMovie) {
-        Column {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w185/${movie.poster_path}",
-                contentDescription = movie.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2f / 3f)
-            )
+    fun MovieItem(movie: ServerMovie, onClick:() -> Unit) {
+        Column(
+            modifier= Modifier.clickable(onClick = onClick)
+        ) {
+            Box{
+                AsyncImage(
+                    model = "https://image.tmdb.org/t/p/w185/${movie.poster_path}",
+                    contentDescription = movie.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f / 3f)
+                )
+
+                if (movie.favorite){
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = movie.title,
+                        modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
+                        tint = Color.Red
+                    )
+                }
+            }
+
 
             Text(
                 text = movie.title,
