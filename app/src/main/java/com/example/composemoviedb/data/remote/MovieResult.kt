@@ -1,4 +1,4 @@
-package com.example.composemoviedb
+package com.example.composemoviedb.data.remote
 
 data class MovieResult(
     val page: Int,
