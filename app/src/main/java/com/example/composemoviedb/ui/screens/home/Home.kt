@@ -29,8 +29,7 @@ fun Home(moviesRepository: MoviesRepository) {
 
         // A surface container using the 'background' color from the theme
         Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            modifier = Modifier.fillMaxSize()
         ) {
             Scaffold(
                 topBar = { TopAppBar(title = { Text(text = "Movies") }) }

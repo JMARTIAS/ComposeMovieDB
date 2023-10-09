@@ -1,7 +1,6 @@
 package com.example.composemoviedb.data.remote
 
 import com.example.composemoviedb.data.Movie
-import com.example.composemoviedb.data.local.LocalMovie
 
 data class ServerMovie(
     val adult: Boolean,
@@ -27,12 +26,4 @@ fun ServerMovie.toMovie() = Movie(
     overview = overview,
     posterPath = poster_path,
     favorite = favorite
-)
-
-fun ServerMovie.toLocalMovie() = LocalMovie(
-    id = 0,
-    title = title,
-    overview = overview,
-    favorite = favorite,
-    posterPath = poster_path
 )

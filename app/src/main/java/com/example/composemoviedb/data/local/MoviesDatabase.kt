@@ -5,7 +5,7 @@ import com.example.composemoviedb.data.Movie
 import kotlinx.coroutines.flow.Flow
 
 @Database(entities = [LocalMovie::class], version = 1)
-abstract class MoviesDatabase : RoomDatabase() {
+abstract class MoviesDatabase: RoomDatabase() {
     abstract fun moviesDao(): MoviesDao
 }
 
