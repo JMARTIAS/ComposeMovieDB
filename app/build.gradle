@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace 'com.example.composemoviedb'
-    compileSdk 34
+    namespace = "com.example.composemoviedb"
+    compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.composemoviedb"
+        applicationId = "com.example.composemoviedb"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -23,18 +23,16 @@ android {
 
     buildTypes {
         release {
-            proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-            )
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -42,27 +40,23 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
-
-    implementation "androidx.compose.ui:ui:1.5.3"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.5.3"
-    implementation 'androidx.compose.material:material:1.5.2'
-    implementation "androidx.compose.material:material-icons-extended:1.5.2"
-
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui-graphics:1.5.3")
-    implementation("androidx.compose.material:material:1.5.2")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.2.2")
@@ -71,7 +65,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.5.3")
     implementation("androidx.room:room-ktx:2.5.2")
 
-    annotationProcessor "androidx.room:room-compiler:2.5.2"
+    kapt("androidx.room:room-compiler:2.5.2")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
