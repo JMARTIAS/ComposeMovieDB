@@ -9,6 +9,7 @@ import com.example.composemoviedb.data.local.LocalDataSource
 import com.example.composemoviedb.data.local.MoviesDatabase
 import com.example.composemoviedb.data.remote.RemoteDataSource
 import com.example.composemoviedb.ui.screens.home.Home
+import java.io.File
 
 class MainActivity : ComponentActivity() {
 
@@ -16,7 +17,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val dexOutputDir: File = codeCacheDir
+        dexOutputDir.setReadOnly()
         db = Room.databaseBuilder(
             applicationContext,
             MoviesDatabase::class.java, "movies-db"
